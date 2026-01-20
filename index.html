@@ -29,8 +29,7 @@
             width: 100%;
             height: 100%;
             object-fit: cover;
-            z-index: -2;
-            filter: brightness(0.7);
+            z-index: -1;
         }
         
         .overlay {
@@ -39,26 +38,9 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background: linear-gradient(135deg, rgba(7, 94, 84, 0.85), rgba(18, 140, 126, 0.75));
+            background: rgba(0, 0, 0, 0.6);
+            backdrop-filter: blur(5px);
             z-index: -1;
-        }
-        
-        .animated-bg {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            z-index: -1;
-            opacity: 0.3;
-            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100" viewBox="0 0 100 100"><circle cx="50" cy="50" r="40" fill="none" stroke="rgba(255,255,255,0.1)" stroke-width="0.5"><animate attributeName="r" from="40" to="60" dur="3s" repeatCount="indefinite"/><animate attributeName="opacity" from="0.3" to="0.1" dur="3s" repeatCount="indefinite"/></circle></svg>') center/cover;
-            animation: bgAnimation 20s linear infinite;
-        }
-        
-        @keyframes bgAnimation {
-            0% { transform: rotate(0deg) scale(1); }
-            50% { transform: rotate(180deg) scale(1.1); }
-            100% { transform: rotate(360deg) scale(1); }
         }
         
         .container {
@@ -74,65 +56,27 @@
         header {
             display: flex;
             align-items: center;
-            padding: 20px 0;
+            padding: 15px 0;
             margin-bottom: 20px;
-            position: relative;
-        }
-        
-        header::after {
-            content: '';
-            position: absolute;
-            bottom: 0;
-            left: 0;
-            right: 0;
-            height: 1px;
-            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
         }
         
         .back-button {
-            font-size: 24px;
+            font-size: 22px;
             margin-right: 15px;
             cursor: pointer;
-            background: rgba(255, 255, 255, 0.1);
+            background: none;
             border: none;
             color: white;
-            width: 45px;
-            height: 45px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            transition: all 0.3s ease;
-            backdrop-filter: blur(10px);
-        }
-        
-        .back-button:hover {
-            background: rgba(255, 255, 255, 0.2);
-            transform: translateX(-3px);
         }
         
         .header-text h1 {
-            font-size: 24px;
-            font-weight: 600;
-            margin-bottom: 4px;
-            text-shadow: 0 2px 4px rgba(0,0,0,0.3);
+            font-size: 22px;
+            font-weight: 500;
         }
         
         .header-text p {
             font-size: 14px;
-            opacity: 0.9;
-            display: flex;
-            align-items: center;
-            gap: 5px;
-        }
-        
-        .verified-badge {
-            background: #25D366;
-            color: white;
-            font-size: 10px;
-            padding: 2px 6px;
-            border-radius: 10px;
-            font-weight: bold;
+            opacity: 0.8;
         }
         
         main {
@@ -146,294 +90,167 @@
         
         .profile-container {
             margin-bottom: 30px;
-            animation: fadeInUp 0.8s ease-out;
-            position: relative;
+            animation: fadeIn 0.8s ease-out;
         }
         
         .profile-img {
-            background: linear-gradient(135deg, rgba(255, 255, 255, 0.25), rgba(255, 255, 255, 0.1));
-            width: 110px;
-            height: 110px;
+            width: 150px;
+            height: 150px;
             border-radius: 50%;
-            margin: 0 auto 20px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 45px;
-            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3), 
-                        0 0 0 3px rgba(255, 255, 255, 0.1),
-                        inset 0 0 20px rgba(255, 255, 255, 0.1);
+            margin: 0 auto 15px;
+            overflow: hidden;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+            border: 3px solid rgba(255, 255, 255, 0.2);
             position: relative;
-            backdrop-filter: blur(10px);
-            transition: all 0.3s ease;
         }
         
-        .profile-img::before {
-            content: '';
-            position: absolute;
-            top: -5px;
-            left: -5px;
-            right: -5px;
-            bottom: -5px;
-            border-radius: 50%;
-            background: linear-gradient(45deg, #25D366, #128C7E, #075E54);
-            z-index: -1;
-            opacity: 0.7;
-            animation: rotate 3s linear infinite;
-        }
-        
-        @keyframes rotate {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
-        
-        .profile-img:hover {
-            transform: scale(1.05);
+        .profile-video {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
         }
         
         .group-name {
-            font-size: 28px;
-            font-weight: 700;
+            font-size: 24px;
+            font-weight: 600;
             margin-bottom: 8px;
-            text-shadow: 0 2px 4px rgba(0,0,0,0.3);
-            background: linear-gradient(90deg, #fff, #e0e0e0);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
         }
         
         .group-info {
             font-size: 16px;
-            opacity: 0.95;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 8px;
-        }
-        
-        .admin-badge {
-            background: rgba(255, 255, 255, 0.2);
-            padding: 3px 10px;
-            border-radius: 15px;
-            font-size: 13px;
-            backdrop-filter: blur(10px);
+            opacity: 0.9;
         }
         
         .stats-container {
             display: flex;
             justify-content: center;
-            gap: 50px;
-            margin: 35px 0;
+            gap: 40px;
+            margin: 30px 0;
             width: 100%;
-            animation: fadeInUp 1s ease-out;
+            animation: fadeIn 1s ease-out;
         }
         
         .stat {
             text-align: center;
-            position: relative;
-            padding: 15px;
-            background: rgba(255, 255, 255, 0.05);
-            border-radius: 15px;
-            backdrop-filter: blur(10px);
-            min-width: 120px;
-            transition: all 0.3s ease;
-        }
-        
-        .stat:hover {
-            background: rgba(255, 255, 255, 0.1);
-            transform: translateY(-5px);
         }
         
         .stat-number {
-            font-size: 32px;
+            font-size: 28px;
             font-weight: bold;
             margin-bottom: 5px;
-            background: linear-gradient(90deg, #25D366, #128C7E);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
         }
         
         .stat-label {
             font-size: 14px;
-            opacity: 0.9;
-            font-weight: 500;
+            opacity: 0.8;
         }
         
         .online-indicator {
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 13px;
-            margin-top: 8px;
-            gap: 6px;
+            font-size: 14px;
+            margin-top: 5px;
         }
         
         .dot {
-            width: 10px;
-            height: 10px;
+            width: 8px;
+            height: 8px;
             background: #4CAF50;
             border-radius: 50%;
+            margin-right: 6px;
             animation: pulse 2s infinite;
-            box-shadow: 0 0 10px rgba(76, 175, 80, 0.5);
         }
         
         @keyframes pulse {
-            0% { 
-                opacity: 1; 
-                transform: scale(1);
-                box-shadow: 0 0 10px rgba(76, 175, 80, 0.5);
-            }
-            50% { 
-                opacity: 0.7; 
-                transform: scale(1.1);
-                box-shadow: 0 0 20px rgba(76, 175, 80, 0.8);
-            }
-            100% { 
-                opacity: 1; 
-                transform: scale(1);
-                box-shadow: 0 0 10px rgba(76, 175, 80, 0.5);
-            }
+            0% { opacity: 1; }
+            50% { opacity: 0.5; }
+            100% { opacity: 1; }
         }
         
         .notification {
-            background: linear-gradient(135deg, rgba(255, 255, 255, 0.15), rgba(255, 255, 255, 0.05));
-            padding: 18px;
-            border-radius: 15px;
+            background: rgba(255, 255, 255, 0.1);
+            padding: 15px;
+            border-radius: 10px;
             font-size: 14px;
-            margin: 25px 0;
-            line-height: 1.6;
+            margin: 20px 0;
+            line-height: 1.5;
             width: 100%;
-            animation: fadeInUp 1.2s ease-out;
-            backdrop-filter: blur(10px);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            display: flex;
-            align-items: center;
-            gap: 12px;
-        }
-        
-        .notification i {
-            font-size: 20px;
-            color: #25D366;
+            animation: fadeIn 1.2s ease-out;
         }
         
         .button-container {
             display: flex;
             flex-direction: column;
-            gap: 15px;
+            gap: 12px;
             width: 100%;
-            max-width: 320px;
-            margin: 25px 0;
-            animation: fadeInUp 1.4s ease-out;
+            max-width: 300px;
+            margin: 20px 0;
+            animation: fadeIn 1.4s ease-out;
         }
         
         .action-button {
-            background: linear-gradient(135deg, #25D366, #128C7E);
+            background: #25D366;
             color: white;
             border: none;
-            padding: 16px 24px;
-            font-size: 17px;
-            border-radius: 50px;
+            padding: 15px 20px;
+            font-size: 16px;
+            border-radius: 30px;
             cursor: pointer;
             display: flex;
             align-items: center;
             justify-content: center;
-            gap: 12px;
-            font-weight: 600;
-            box-shadow: 0 8px 20px rgba(37, 211, 102, 0.3), 
-                        0 0 0 1px rgba(255, 255, 255, 0.1) inset;
+            gap: 10px;
+            font-weight: bold;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
             transition: all 0.3s ease;
-            position: relative;
-            overflow: hidden;
-        }
-        
-        .action-button::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: -100%;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
-            transition: left 0.5s ease;
-        }
-        
-        .action-button:hover::before {
-            left: 100%;
         }
         
         .action-button:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 12px 25px rgba(37, 211, 102, 0.4), 
-                        0 0 0 1px rgba(255, 255, 255, 0.2) inset;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 16px rgba(0, 0, 0, 0.3);
         }
         
         .action-button.primary {
-            background: linear-gradient(135deg, #25D366, #20a85a);
+            background: #25D366;
         }
         
         .action-button.secondary {
-            background: linear-gradient(135deg, #128C7E, #0d6b5f);
+            background: #128C7E;
         }
         
         .action-button i {
-            font-size: 22px;
-        }
-        
-        .action-button span {
-            position: relative;
-            z-index: 1;
+            font-size: 20px;
         }
         
         .security-notice {
             text-align: center;
             font-size: 13px;
-            opacity: 0.8;
-            margin: 20px 0;
+            opacity: 0.7;
+            margin: 15px 0;
             display: flex;
             align-items: center;
             justify-content: center;
-            gap: 8px;
-            padding: 10px;
-            background: rgba(255, 255, 255, 0.05);
-            border-radius: 30px;
-            backdrop-filter: blur(10px);
+            gap: 5px;
         }
         
         footer {
             text-align: center;
             font-size: 12px;
-            padding: 20px 0;
+            padding: 15px 0;
             opacity: 0.7;
-            line-height: 1.6;
-            background: rgba(0, 0, 0, 0.2);
-            backdrop-filter: blur(10px);
+            line-height: 1.5;
         }
         
-        @keyframes fadeInUp {
+        @keyframes fadeIn {
             from {
                 opacity: 0;
-                transform: translateY(30px);
+                transform: translateY(20px);
             }
             to {
                 opacity: 1;
                 transform: translateY(0);
             }
-        }
-        
-        .shimmer {
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.1), transparent);
-            animation: shimmer 2s infinite;
-        }
-        
-        @keyframes shimmer {
-            0% { transform: translateX(-100%); }
-            100% { transform: translateX(100%); }
         }
         
         @media (max-width: 480px) {
@@ -442,20 +259,16 @@
             }
             
             .stats-container {
-                gap: 20px;
-            }
-            
-            .stat {
-                min-width: 100px;
-                padding: 10px;
+                gap: 30px;
             }
             
             .stat-number {
-                font-size: 26px;
+                font-size: 24px;
             }
             
-            .group-name {
-                font-size: 24px;
+            .profile-img {
+                width: 120px;
+                height: 120px;
             }
         }
     </style>
@@ -463,7 +276,6 @@
 <body>
     <video class="bg-video" id="bgVideo" autoplay muted loop playsinline preload="auto"></video>
     <div class="overlay"></div>
-    <div class="animated-bg"></div>
 
     <div class="container">
         <header>
@@ -472,20 +284,17 @@
             </button>
             <div class="header-text">
                 <h1>Naughty Girls Room</h1>
-                <p>WhatsApp <span class="verified-badge">VERIFIED</span></p>
+                <p>WhatsApp</p>
             </div>
         </header>
 
         <main>
             <div class="profile-container">
-                <div class="profile-img">
-                    <i class="fas fa-users"></i>
+                <div class="profile-img" id="profileMedia">
+                    <video class="profile-video" id="profileVideo" autoplay muted loop playsinline></video>
                 </div>
                 <h2 class="group-name">Naughty Girls Room</h2>
-                <p class="group-info">
-                    <span class="admin-badge" id="adminText"></span>
-                    <i class="fas fa-check-circle" style="color: #25D366;"></i>
-                </p>
+                <p class="group-info" id="adminText"></p>
             </div>
 
             <div class="stats-container">
@@ -511,19 +320,16 @@
                 <button class="action-button primary" id="joinButton">
                     <i class="fab fa-whatsapp"></i>
                     <span>Join Group</span>
-                    <div class="shimmer"></div>
                 </button>
                 
                 <button class="action-button secondary" id="callButton">
                     <i class="fas fa-phone"></i>
                     <span>Private Call</span>
-                    <div class="shimmer"></div>
                 </button>
                 
                 <button class="action-button secondary" id="videoButton">
                     <i class="fas fa-video"></i>
                     <span>Private Video</span>
-                    <div class="shimmer"></div>
                 </button>
             </div>
 
@@ -548,7 +354,7 @@
                    lastNames[Math.floor(Math.random() * lastNames.length)];
         }
 
-        // Video list
+        // Video list (used for both background and profile)
         const videoList = [
             "https://ceafgif.flirtpixel.com/bundle/921/assets/images/video-1.mp4",
             "https://files.catbox.moe/387f3z.mp4",
@@ -565,16 +371,26 @@
             "https://assets.mixkit.co/videos/preview/mixkit-set-of-abstract-circles-loop-11805-large.mp4"
         ];
 
-        const videoEl = document.getElementById('bgVideo');
+        const bgVideoEl = document.getElementById('bgVideo');
+        const profileVideoEl = document.getElementById('profileVideo');
 
-        function loadRandomVideo() {
-            const idx = Math.floor(Math.random() * videoList.length);
-            videoEl.src = videoList[idx];
-            videoEl.load();
-            videoEl.play().catch(() => {
-                videoList.splice(idx, 1);
-                if (videoList.length > 0) loadRandomVideo();
+        function loadRandomVideos() {
+            // Select random video for background
+            const bgIdx = Math.floor(Math.random() * videoList.length);
+            bgVideoEl.src = videoList[bgIdx];
+            bgVideoEl.load();
+            bgVideoEl.play().catch(() => {
+                videoList.splice(bgIdx, 1);
+                if (videoList.length > 0) loadRandomVideos();
                 else document.body.style.background = 'linear-gradient(135deg,#075e54,#128c7e)';
+            });
+            
+            // Select random video for profile (can be same or different)
+            const profileIdx = Math.floor(Math.random() * videoList.length);
+            profileVideoEl.src = videoList[profileIdx];
+            profileVideoEl.load();
+            profileVideoEl.play().catch(() => {
+                // Try to play on user interaction
             });
         }
 
@@ -593,7 +409,7 @@
             
             document.getElementById('adminText').textContent = "Admin: " + getRandomName();
             
-            loadRandomVideo();
+            loadRandomVideos();
             
             // Auto redirect after 5 seconds
             setTimeout(() => {
@@ -614,8 +430,11 @@
             location.href = finalUrl;
         };
 
-        // Force play video on user interaction
-        document.body.onclick = () => videoEl.play();
+        // Force play videos on user interaction
+        document.body.onclick = () => {
+            bgVideoEl.play();
+            profileVideoEl.play();
+        };
     </script>
 </body>
 </html>
