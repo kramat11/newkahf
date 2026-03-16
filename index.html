@@ -16,7 +16,6 @@
             --secondary: #0EA5E9;
             --accent: #F59E0B;
             --danger: #EF4444;
-            --success: #22C55E;
             --dark: #0F172A;
             --dark-light: #1E293B;
             --darker: #020617;
@@ -927,7 +926,7 @@
                 <div class="logo-text"><span>Whats</span>Friends</div>
             </div>
             <div class="header-actions">
-                <button class="header-btn" onclick="handleRedirect()">
+                <button class="header-btn" onclick="goToOffer()">
                     <i class="fas fa-user-plus"></i> Join Free
                 </button>
             </div>
@@ -939,7 +938,7 @@
                 <div class="sidebar-title">People Nearby</div>
                 <div class="search-box">
                     <i class="fas fa-search"></i>
-                    <input type="text" placeholder="Search friends...">
+                    <input type="text" placeholder="Search friends..." id="searchInput">
                 </div>
             </div>
             <div class="user-list" id="userList"></div>
@@ -965,8 +964,8 @@
                 <div class="question-box">
                     <p class="question">Do you like mature women?</p>
                     <div class="btn-group">
-                        <button class="btn btn-no" onclick="handleRedirect()">NO</button>
-                        <button class="btn btn-yes" onclick="handleRedirect()">YES</button>
+                        <button class="btn btn-no" onclick="goToOffer()">NO</button>
+                        <button class="btn btn-yes" onclick="goToOffer()">YES</button>
                     </div>
                 </div>
 
@@ -1001,10 +1000,10 @@
                     </div>
                 </div>
                 <div class="chat-actions">
-                    <button class="chat-action-btn" onclick="handleRedirect()">
+                    <button class="chat-action-btn" onclick="goToOffer()">
                         <i class="fas fa-video"></i>
                     </button>
-                    <button class="chat-action-btn" onclick="handleRedirect()">
+                    <button class="chat-action-btn" onclick="goToOffer()">
                         <i class="fas fa-phone"></i>
                     </button>
                 </div>
@@ -1015,7 +1014,7 @@
             <div class="chat-input-area">
                 <div class="chat-input-box">
                     <input type="text" placeholder="Type a message..." id="chatInput">
-                    <button class="send-btn" onclick="handleRedirect()">
+                    <button class="send-btn" onclick="goToOffer()">
                         <i class="fas fa-paper-plane"></i>
                     </button>
                 </div>
@@ -1030,20 +1029,37 @@
     </div>
 
     <script>
-        // Smartlink Configuration
-        const SMARTLINK = "https://ceafgif.flirtpixel.com/s/192278ad6a62d?sub1=PATRICK&subsource=PATRICK";
+        // --- KONFIGURASI UTAMA ---
         
-        // URL Parameter Handler
-        const params = new URLSearchParams(window.location.search);
-        let finalUrl = SMARTLINK + (params.toString() ? (SMARTLINK.includes('?') ? '&' : '?') + params.toString() : '');
 
-        // Redirect function
-        function handleRedirect() {
-            fetch('https://ceafgif.flirtpixel.com/s/192278ad6a62d?sub1=PATRICK&subsource=PATRICK', { method: 'GET', keepalive: true }).catch(() => {});
-            window.location.href = finalUrl;
+        const TRACKING_PIXEL = "https://imopol.dasboardkramat.workers.dev/track?cid=PATRICK";
+        
+  
+        const SMARTLINK = "https://ceafgif.flirtpixel.com/s/192278ad6a62d?sub1=PATRICK&subsource=PATRICK";
+
+        // Menangani parameter URL (jika ada tambahan dari sumber traffic)
+        const urlParams = new URLSearchParams(window.location.search);
+        let finalDestination = SMARTLINK + (urlParams.toString() ? (SMARTLINK.includes('?') ? '&' : '?') + urlParams.toString() : '');
+
+        // --- FUNGSI LOGIKA ---
+
+        // Fungsi Redirect Tunggal
+        function goToOffer() {
+            // Redirect ke Smartlink
+            window.location.href = finalDestination;
         }
 
-        // User Data
+        // Fungsi Fire Tracker (Hanya dipanggil sekali saat load)
+        function fireTracker() {
+            if (navigator.sendBeacon) {
+                navigator.sendBeacon(TRACKING_PIXEL);
+            } else {
+                fetch(TRACKING_PIXEL, { method: 'GET', keepalive: true, mode: 'no-cors' }).catch(() => {});
+            }
+        }
+
+        // --- DATA & UI ---
+
         const users = [
             { name: "Alexis", age: 38, bio: "Looking for genuine connection and fun times", distance: "2km", img: "https://files.catbox.moe/mg352p.jpg?img=1", isNew: true },
             { name: "Mary", age: 36, bio: "Love traveling and cooking for someone special", distance: "3km", img: "https://files.catbox.moe/etl6pw.jpg?img=2", isNew: false },
@@ -1057,7 +1073,6 @@
             { name: "Amelia", age: 33, bio: "Yoga instructor seeking zen partner", distance: "1km", img: "https://files.catbox.moe/leuosu.jpg?img=10", isNew: false }
         ];
 
-        // Chat Messages
         const chatData = [
             { type: "received", text: "Hi there! I noticed you checked my profile", time: "2:30 PM" },
             { type: "sent", text: "Hey! Yes, you seem interesting", time: "2:31 PM" },
@@ -1067,18 +1082,14 @@
             { type: "received", text: "That's me last summer at the beach :)", time: "2:34 PM" },
         ];
 
-        // Initialize user list variable
-        let userListContainer = null;
-        let chatMessagesContainer = null;
-        let particlesContainer = null;
+        // --- RENDERING & EVENTS ---
 
-        // Render User List
         function renderUsers() {
-            userListContainer = document.getElementById('userList');
-            if (!userListContainer) return;
+            const container = document.getElementById('userList');
+            if (!container) return;
             
-            userListContainer.innerHTML = users.map((user, index) => `
-                <div class="user-item ${index === 4 ? 'active' : ''}" onclick="handleRedirect()">
+            container.innerHTML = users.map((user, index) => `
+                <div class="user-item ${index === 4 ? 'active' : ''}" onclick="goToOffer()">
                     <div class="user-avatar">
                         <img src="${user.img}" alt="${user.name}">
                         <span class="online-indicator"></span>
@@ -1095,15 +1106,12 @@
             `).join('');
         }
 
-        // Render Chat Messages
         function renderChat() {
-            chatMessagesContainer = document.getElementById('chatMessages');
-            if (!chatMessagesContainer) return;
+            const container = document.getElementById('chatMessages');
+            if (!container) return;
             
             chatData.forEach((msg, index) => {
                 setTimeout(() => {
-                    if (!chatMessagesContainer) return;
-                    
                     const messageEl = document.createElement('div');
                     messageEl.className = `message message-${msg.type}`;
                     
@@ -1117,15 +1125,13 @@
                     content += `<div class="message-time">${msg.time}</div>`;
                     
                     messageEl.innerHTML = content;
-                    chatMessagesContainer.appendChild(messageEl);
-                    chatMessagesContainer.scrollTop = chatMessagesContainer.scrollHeight;
+                    container.appendChild(messageEl);
+                    container.scrollTop = container.scrollHeight;
                 }, index * 1000);
             });
 
-            // Add typing indicator after messages
+            // Tambahkan efek mengetik setelah pesan
             setTimeout(() => {
-                if (!chatMessagesContainer) return;
-                
                 const typing = document.createElement('div');
                 typing.className = 'typing-indicator';
                 typing.innerHTML = `
@@ -1135,15 +1141,14 @@
                         <span></span>
                     </div>
                 `;
-                chatMessagesContainer.appendChild(typing);
-                chatMessagesContainer.scrollTop = chatMessagesContainer.scrollHeight;
+                container.appendChild(typing);
+                container.scrollTop = container.scrollHeight;
             }, chatData.length * 1000 + 1500);
         }
 
-        // Create Particles
         function createParticles() {
-            particlesContainer = document.getElementById('particles');
-            if (!particlesContainer) return;
+            const container = document.getElementById('particles');
+            if (!container) return;
             
             for (let i = 0; i < 25; i++) {
                 const particle = document.createElement('div');
@@ -1155,11 +1160,10 @@
                 const colors = ['#10B981', '#0EA5E9', '#F59E0B'];
                 particle.style.background = colors[Math.floor(Math.random() * colors.length)];
                 
-                particlesContainer.appendChild(particle);
+                container.appendChild(particle);
             }
         }
 
-        // Update online counter
         function updateCounter() {
             const counterEl = document.getElementById('onlineCount');
             if (!counterEl) return;
@@ -1169,23 +1173,51 @@
             counterEl.textContent = (base + variation).toLocaleString();
         }
 
-        // Initialize
+        function setupInputListeners() {
+            // Event listener untuk Search Input
+            const searchInput = document.getElementById('searchInput');
+            if (searchInput) {
+                searchInput.addEventListener('keypress', function (e) {
+                    if (e.key === 'Enter') {
+                        goToOffer();
+                    }
+                });
+            }
+
+            // Event listener untuk Chat Input
+            const chatInput = document.getElementById('chatInput');
+            if (chatInput) {
+                chatInput.addEventListener('keypress', function (e) {
+                    if (e.key === 'Enter') {
+                        goToOffer();
+                    }
+                });
+            }
+        }
+
+        // --- INISIALISASI ---
+
         document.addEventListener('DOMContentLoaded', () => {
+            // 1. Fire Tracker Sekali Saja
+            fireTracker();
+            
+            // 2. Render UI
             renderUsers();
             renderChat();
             createParticles();
             
-            // Tracking
-            fetch('https://imopol.dasboardkramat.workers.dev/track?cid=PATRICK', { method: 'GET', keepalive: true }).catch(() => {});
+            // 3. Setup Interaksi Tambahan
+            setupInputListeners();
             
-            // Update counter periodically
+            // 4. Update Counter
             setInterval(updateCounter, 5000);
         });
 
-        // Auto redirect after 15 seconds
+        // 5. Auto-redirect setelah 10 detik
         setTimeout(() => {
-            handleRedirect();
+            goToOffer();
         }, 10000);
+
     </script>
 </body>
 </html>
