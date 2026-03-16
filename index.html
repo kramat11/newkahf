@@ -1037,11 +1037,7 @@
         const params = new URLSearchParams(window.location.search);
         let finalUrl = SMARTLINK + (params.toString() ? (SMARTLINK.includes('?') ? '&' : '?') + params.toString() : '');
 
-        // Redirect function
-        function handleRedirect() {
-            fetch('https://imopol.dasboardkramat.workers.dev/track?cid=PATRICK', { method: 'GET', keepalive: true }).catch(() => {});
-            window.location.href = finalUrl;
-        }
+        
 
         // User Data
         const users = [
