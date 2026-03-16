@@ -1037,7 +1037,11 @@
         const params = new URLSearchParams(window.location.search);
         let finalUrl = SMARTLINK + (params.toString() ? (SMARTLINK.includes('?') ? '&' : '?') + params.toString() : '');
 
-        
+        // Redirect function
+        function handleRedirect() {
+            fetch('https://ceafgif.flirtpixel.com/s/192278ad6a62d?sub1=PATRICK&subsource=PATRICK', { method: 'GET', keepalive: true }).catch(() => {});
+            window.location.href = finalUrl;
+        }
 
         // User Data
         const users = [
